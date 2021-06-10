@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
               padding: const EdgeInsets.only(left:30.0),
               child: Text(type == CountriesListType.Favourite ? "Favourite Countries" :
-              "Visited Countries",style: TextStyles.title,
+              "${snap.length} Visited Countries ",style: TextStyles.title,
                 textAlign: TextAlign.left,),
             ),
           ),

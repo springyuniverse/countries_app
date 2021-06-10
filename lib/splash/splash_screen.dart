@@ -24,7 +24,8 @@ class SplashScreen extends StatelessWidget {
               ),
               Text(
                 'Discover world countries, favourite'
-                    ' them \n and mark the visited ones ✈️',
+                    ' them \n and mark the visited ones ✈️ '
+                    '\n NOTE: Long press to add a visited country' ,
                 style: TextStyles.subtitle,
                 textAlign: TextAlign.center,
               ),
@@ -33,7 +34,7 @@ class SplashScreen extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, Routes.home);
+                  Navigator.pushReplacementNamed(context,Routes.home);
                 },
                 child: Container(
                   alignment: Alignment.center,
