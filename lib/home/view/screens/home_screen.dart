@@ -5,7 +5,6 @@ import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 import '../../../shared/ui/helpers/text_styles.dart';
-import '../../models/country.dart';
 import '../../view_model/home.dart';
 import '../components/country_card.dart';
 import '../helpers/list_type.dart';
@@ -52,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
 
-  Widget _tabBarView(List<Country> snap, homeViewModel, BuildContext context) =>
+  Widget _tabBarView(List snap, homeViewModel, BuildContext context) =>
       TabBarView(
         children: [
           _countriesList(homeViewModel.countriesList, homeViewModel
@@ -66,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   Widget _countriesList(
-          List<Country> snap, homeViewModel,
+          List snap, homeViewModel,
       BuildContext context,CountriesListType type) =>
       Center(
           child: Column(
