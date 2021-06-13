@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 
-import '../../shared/utils/extensions.dart';
 import '../models/country.dart';
 import '../repository/local/local_source.dart';
 import '../repository/remote/country_repo.dart';
@@ -14,34 +14,66 @@ final homeProvider =
 /// future provider for countries
 final countriesProvider = FutureProvider<List<Country>>((ref) async {
   final homeClient = ref.read(homeProvider);
-  return  await homeClient.countries;
+  return await homeClient.countries;
 });
 
+final showFilteredList = Provider.family<List<Country>, String>((ref, id) {
+  final homeView = ref.read(homeProvider);
 
+  return homeView?.countriesList
+      ?.where(
+          (element) => element.name.toLowerCase().contains(id.toLowerCase()))
+      ?.toList();
+});
 
 /// Responsible to store the state of the UI
 class HomeViewModel extends ChangeNotifier {
   final CountryRemoteRepo _remoteRepo = CountryRemoteRepo();
   final CountryLocalRepo _localRepo = CountryLocalRepo();
-  TextEditingController searchController = TextEditingController();
+  int _currentTabIndex = 0;
+  set currentTabIndex(int index) {
+    _currentTabIndex = index;
+    refreshList(index);
+    notifyListeners();
+  }
+
+  int get currentTabIndex => _currentTabIndex;
 
   List<Country> countriesList;
-  List<Country> filtered;
+
+  List<Country> filtered = [];
   Box get favBox => _localRepo.favBox;
   Box get visitedBox => _localRepo.visitedBox;
 
-  Future<List<Country>> get countries async =>
-      filtered = countriesList = await _remoteRepo.getCountries();
+  void refreshList(int index) {
+    switch (index) {
+      case 0:
+        countriesList = filtered;
+        notifyListeners();
+        break;
+      case 1:
+        countriesList = favCountries;
+        notifyListeners();
+        break;
+      case 2:
+        countriesList = visitedCountries;
+        notifyListeners();
+        break;
+    }
+  }
 
-  Future<List<Country>> filteredCountries(String query) async {
+  Future<List<Country>> get countries async =>
+      countriesList = filtered = await _remoteRepo.getCountries();
+
+  List<Country> filteredCountries(String query) {
     if (query.isNotEmpty) {
       countriesList = filtered
-          .where((element) => element.name.contains(query.capitalize()))
+          .where((element) =>
+              element.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
       notifyListeners();
       return countriesList;
     }
-    notifyListeners();
     return countriesList = filtered;
   }
 
